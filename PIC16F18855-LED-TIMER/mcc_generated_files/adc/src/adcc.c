@@ -77,12 +77,12 @@ void ADCC_Initialize(void)
     ADREF = 0x0;
     // ADACT disabled; 
     ADACT = 0x0;
-    // ADCCS FOSC/2; 
-    ADCLK = 0x0;
+    // ADCCS FOSC/16; 
+    ADCLK = 0x7;
     // GO_nDONE undefined; ADFM right; ADON enabled; ADCONT disabled; ADCS FOSC; 
     ADCON0 = 0x85;
-    // ADACQ 0; 
-    ADACQ = 0x0;
+    // ADACQ 1; 
+    ADACQ = 0x1;
     
     // Clear the ADC interrupt flag
     PIR1bits.ADIF = 0;

@@ -52,14 +52,14 @@ static void TMR0_DefaultOverflowCallback(void);
 
 void TMR0_Initialize(void){
 
-    //TMR0H 10; 
-    TMR0H = 0xA;
+    //TMR0H 161; 
+    TMR0H = 0xA1;
 
     //TMR0L 0; 
     TMR0L = 0x0;
 
-    //T0CS FOSC/4; T0CKPS 1:1024; T0ASYNC synchronised; 
-    T0CON1 = 0x4A;
+    //T0CS HFINTOSC; T0CKPS 1:1024; T0ASYNC not_synchronised; 
+    T0CON1 = 0x7A;
 
 
     //Set default callback for TMR0 overflow interrupt
@@ -71,8 +71,8 @@ void TMR0_Initialize(void){
     //Enable TMR0 interrupt.
     PIE0bits.TMR0IE = 1;
 	
-    //T0OUTPS 1:11; T0EN enabled; T016BIT 8-bit; 
-    T0CON0 = 0x8A;
+    //T0OUTPS 1:8; T0EN enabled; T016BIT 8-bit; 
+    T0CON0 = 0x87;
 }
 
 void TMR0_Start(void)

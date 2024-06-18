@@ -32,19 +32,27 @@
 */
 #include "mcc_generated_files/system/system.h"
 
-
-static void Timer0_UserOverflowCallback(void)
-{
-    IO_RA1_Toggle();
-}
-
-
 /*
     Main application
 */
 
+void IO_RA5_UserInterruptHandler(void)
+{
+    IO_RA1_Toggle();
+}
+
+void TMR0_DefaultOverflowCallback(void)
+{
+    //Add your interrupt code here or
+    //Use TMR0_OverflowCallbackRegister function to use Custom ISR
+    IO_RA0_Toggle();
+    IO_RA3_Toggle();
+}
+
 int main(void)
 {
+    uint8_t tmp=0;
+
     SYSTEM_Initialize();
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts 
@@ -63,11 +71,17 @@ int main(void)
     // Disable the Peripheral Interrupts 
     //INTERRUPT_PeripheralInterruptDisable(); 
 
-    //Set default callback for TMR0 overflow interrupt
-    TMR0_OverflowCallbackRegister(Timer0_UserOverflowCallback);
+    IO_RA5_SetInterruptHandler(IO_RA5_UserInterruptHandler);
+
+    TMR0_OverflowCallbackRegister(TMR0_DefaultOverflowCallback);
     TMR0_Start();
 
     while(1)
     {
+        // 10bit to 5bit, 0x90 ~ 0xAF
+        // SPM: 166(0xAF) ~ 202(0x90)
+        tmp = (uint8_t)(ADCC_GetSingleConversion(channel_ANA4) >> 5) + 0x90;
+
+        if(TMR0H!=tmp) TMR0_Reload(tmp);
     }    
 }
